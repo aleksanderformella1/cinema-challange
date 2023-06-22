@@ -2,12 +2,18 @@ package com.radbrackets.cinema.show;
 
 import com.radbrackets.cinema.event.room.RoomEventRepository;
 import com.radbrackets.cinema.event.room.RoomEventType;
-import com.radbrackets.cinema.event.show.*;
+import com.radbrackets.cinema.event.show.AddCinemaShowQuery;
+import com.radbrackets.cinema.event.show.CinemaShowRepository;
+import com.radbrackets.cinema.event.show.CinemaShowService;
+import com.radbrackets.cinema.event.show.ShowType;
 import com.radbrackets.cinema.movie.Movie;
 import com.radbrackets.cinema.movie.MovieRepository;
 import com.radbrackets.cinema.room.Room;
 import com.radbrackets.cinema.room.RoomRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +22,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static com.radbrackets.cinema.config.CinemaConfig.OPENING_HOURS;
 import static java.util.UUID.randomUUID;
@@ -83,6 +92,35 @@ class CinemaShowServiceTest {
     var createdRoomCleanup = createdRoomsCleanups.get(0);
     assertEquals(room, createdRoomCleanup.room());
     assertEquals(RoomEventType.CLEANING_SLOT, createdRoomCleanup.eventType());
+  }
+
+  @Test
+  public void testSynchronizedAddingNewShow() throws InterruptedException {
+    int numberOfThreads = 10;
+    var executor = Executors.newFixedThreadPool(numberOfThreads);
+
+    var room = roomsCatalog.get(0);
+    var movie = movieCatalog.get(0);
+    var showDuration = Duration.ofMinutes(30);
+
+    final var initialStart = LocalDateTime.parse("2023-06-20T08:00");
+
+    IntStream.range(0, numberOfThreads).forEach(
+        i -> executor.submit(() -> {
+          var query =
+              new AddCinemaShowQuery(
+                  room.id(),
+                  movie.id(),
+                  ShowType.REGULAR,
+                  false,
+                  initialStart.plusHours(i),
+                  showDuration);
+          service.addNew(query);
+        }
+    ));
+    executor.shutdown();
+    executor.awaitTermination(5, TimeUnit.SECONDS);
+    assertEquals(numberOfThreads, cinemaShowRepository.getEvents().size());
   }
 
   @Test

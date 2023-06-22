@@ -20,7 +20,7 @@ public class RoomEventService {
   private final RoomEventRepository roomEventRepository;
   private final RoomRepository roomRepository;
 
-  public void addNew(RoomEventQuery query) {
+  public synchronized void addNew(RoomEventQuery query) {
     query.validate();
 
     Range<LocalDateTime> showTimeRange = Range.closed(query.getStart(), query.getEnd());

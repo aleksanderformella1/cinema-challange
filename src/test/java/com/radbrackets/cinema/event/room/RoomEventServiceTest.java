@@ -4,7 +4,6 @@ import com.google.common.collect.Range;
 import com.radbrackets.cinema.event.GetEventQuery;
 import com.radbrackets.cinema.room.Room;
 import com.radbrackets.cinema.room.RoomRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static com.radbrackets.cinema.event.room.RoomEventType.UNAVAILABILITY;
 import static java.util.UUID.randomUUID;
@@ -103,6 +104,30 @@ class RoomEventServiceTest {
     var secondRoomEvent = secondRoomEvents.get(0);
     assertEquals(secondRoom, secondRoomEvent.room());
     assertEquals(secondEventStart, secondRoomEvent.start());
+  }
+
+  @Test
+  public void testSynchronizedAddingNewEvent() throws InterruptedException {
+    int numberOfThreads = 10;
+    var executor = Executors.newFixedThreadPool(numberOfThreads);
+
+    var room = roomsCatalog.get(0);
+    roomRepository.add(room);
+    var start = LocalDateTime.parse("2023-06-20T08:00");
+
+    IntStream.range(0, numberOfThreads).forEach(
+        i -> executor.submit(() -> {
+              var query =
+                  new RoomEventQuery(room.id(),
+                      start.plusHours(i),
+                      start.plusHours(i).plusMinutes(30),
+                      UNAVAILABILITY);
+              service.addNew(query);
+            }
+        ));
+    executor.shutdown();
+    executor.awaitTermination(5, TimeUnit.SECONDS);
+    assertEquals(numberOfThreads, roomEventRepository.getEvents().size());
   }
 
   @Test
