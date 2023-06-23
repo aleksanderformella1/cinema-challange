@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 class MovieController {
 
-  private final MovieService service;
+  private final FindMovieService service;
 
   @GetMapping
   public List<Movie> getAll() {

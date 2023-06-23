@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 class RoomController {
 
-  private final RoomService service;
+  private final FindRoomService service;
 
   @GetMapping
   public List<Room> getAll() {
