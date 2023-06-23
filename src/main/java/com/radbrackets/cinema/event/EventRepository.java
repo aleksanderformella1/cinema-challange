@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class EventRepository<TRoomEvent extends Event> {
+public abstract class EventRepository<TEvent extends Event> {
 
   @Getter
-  private final List<TRoomEvent> events = new ArrayList<>();
+  private final List<TEvent> events = new ArrayList<>();
 
-  public void save(TRoomEvent event) {
+  public void save(TEvent event) {
     events.add(event);
   }
 
-  public List<TRoomEvent> getForPeriod(Room room, Range<LocalDateTime> period) {
+  public List<TEvent> getForPeriod(Room room, Range<LocalDateTime> period) {
     return getEvents().stream()
         .filter(event -> event.room().id().equals(room.id()) &&
             period.isConnected(Range.closed(event.start(), event.end())))

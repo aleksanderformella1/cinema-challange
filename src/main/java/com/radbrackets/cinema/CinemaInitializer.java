@@ -2,8 +2,8 @@ package com.radbrackets.cinema;
 
 import lombok.RequiredArgsConstructor;
 
-import com.radbrackets.cinema.movie.MovieService;
-import com.radbrackets.cinema.room.RoomService;
+import com.radbrackets.cinema.movie.CreateMovieService;
+import com.radbrackets.cinema.room.CreateRoomService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 class CinemaInitializer {
 
-  private final RoomService roomService;
-  private final MovieService movieService;
+  private final CreateRoomService createRoomService;
+  private final CreateMovieService createMovieService;
 
   private static final List<String> movieCatalog = List.of(
       "Shrek",
@@ -33,7 +33,7 @@ class CinemaInitializer {
 
   @EventListener(ApplicationReadyEvent.class)
   public void init() {
-    movieCatalog.forEach(movieService::addNew);
-    roomsCleaningTimes.forEach(roomService::addNew);
+    movieCatalog.forEach(createMovieService::addNew);
+    roomsCleaningTimes.forEach(createRoomService::addNew);
   }
 }

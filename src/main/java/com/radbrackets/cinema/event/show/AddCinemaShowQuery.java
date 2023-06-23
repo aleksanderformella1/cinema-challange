@@ -1,5 +1,7 @@
 package com.radbrackets.cinema.event.show;
 
+import com.radbrackets.cinema.event.EventQuery;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,7 +16,7 @@ public record AddCinemaShowQuery(
     ShowType showType,
     boolean threeDimGlassesRequired,
     LocalDateTime start,
-    Duration duration) {
+    Duration duration) implements EventQuery {
 
   public void validate() {
     if (!OPENING_HOURS.contains(start.toLocalTime())) {
