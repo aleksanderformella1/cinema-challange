@@ -3,10 +3,8 @@ package com.radbrackets.cinema.event.room;
 import com.radbrackets.cinema.event.GetEventQuery;
 import com.radbrackets.cinema.room.Room;
 import com.radbrackets.cinema.room.RoomRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +16,8 @@ import java.util.List;
 
 import static com.radbrackets.cinema.event.room.RoomEventType.UNAVAILABILITY;
 import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

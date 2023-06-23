@@ -1,7 +1,6 @@
 package com.radbrackets.cinema.event.room;
 
 import com.google.common.collect.Range;
-import com.radbrackets.cinema.event.GetEventQuery;
 import com.radbrackets.cinema.room.Room;
 import com.radbrackets.cinema.room.RoomRepository;
 import org.junit.jupiter.api.BeforeAll;
