@@ -5,7 +5,7 @@ import com.radbrackets.cinema.room.Room;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public interface Event extends Comparable<LocalDateTime> {
+public interface Event extends Comparable<Event> {
 
   UUID id();
   Room room();
@@ -13,7 +13,7 @@ public interface Event extends Comparable<LocalDateTime> {
   LocalDateTime end();
 
   @Override
-  default int compareTo(LocalDateTime event) {
-    return start().compareTo(event);
+  default int compareTo(Event event) {
+    return start().compareTo(event.start());
   }
 }

@@ -1,11 +1,7 @@
-package com.radbrackets.cinema.show;
+package com.radbrackets.cinema.event.show;
 
 import com.radbrackets.cinema.event.room.RoomEventRepository;
 import com.radbrackets.cinema.event.room.RoomEventType;
-import com.radbrackets.cinema.event.show.AddCinemaShowQuery;
-import com.radbrackets.cinema.event.show.CinemaShowRepository;
-import com.radbrackets.cinema.event.show.CinemaShowService;
-import com.radbrackets.cinema.event.show.ShowType;
 import com.radbrackets.cinema.movie.Movie;
 import com.radbrackets.cinema.movie.MovieRepository;
 import com.radbrackets.cinema.room.Room;
@@ -34,14 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CinemaShowServiceTest {
+class CreateCinemaShowServiceTest {
 
   @Autowired private RoomEventRepository roomEventRepository;
   @Autowired private MovieRepository movieRepository;
   @Autowired private RoomRepository roomRepository;
   @Autowired private CinemaShowRepository cinemaShowRepository;
 
-  @Autowired private CinemaShowService service;
+  @Autowired private CreateCinemaShowService service;
 
   private final List<Movie> movieCatalog =
       List.of(

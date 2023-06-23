@@ -12,15 +12,16 @@ import java.util.List;
 @AllArgsConstructor
 class CinemaShowController {
 
-  private final CinemaShowService service;
+  private final CreateCinemaShowService createCinemaShowService;
+  private final FindCinemaShowService findCinemaShowService;
 
   @PostMapping
   public void add(@RequestBody AddCinemaShowQuery query) {
-    service.addNew(query);
+    createCinemaShowService.addNew(query);
   }
 
   @GetMapping
   public List<CinemaShow> find(GetEventQuery query) {
-    return service.find(query);
+    return findCinemaShowService.find(query);
   }
 }

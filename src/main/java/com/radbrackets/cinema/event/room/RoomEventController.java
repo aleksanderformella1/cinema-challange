@@ -12,15 +12,16 @@ import java.util.List;
 @RequiredArgsConstructor
 class RoomEventController {
 
-  private final RoomEventService service;
+  private final CreateRoomEventService createRoomEventService;
+  private final FindRoomEventService findRoomEventService;
 
   @PostMapping("/unavailability")
   public void add(@RequestBody AddRoomUnavailabilityQuery query) {
-    service.addNew(query);
+    createRoomEventService.addNew(query);
   }
 
   @GetMapping
   public List<RoomEvent> find(GetEventQuery query) {
-    return service.find(query);
+    return findRoomEventService.find(query);
   }
 }
