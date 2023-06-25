@@ -18,7 +18,8 @@ class GenericExceptionControllerAdvice {
 
   @ExceptionHandler(Exception.class)
   ResponseEntity<ErrorDto> handle(Exception e) {
-    return ResponseEntity.badRequest().body(new ErrorDto(INTERNAL_SERVER_ERROR, e.getMessage()));
+    return ResponseEntity.internalServerError()
+        .body(new ErrorDto(INTERNAL_SERVER_ERROR, e.getMessage()));
   }
 
   record ErrorDto(HttpStatus error, String reason) {
